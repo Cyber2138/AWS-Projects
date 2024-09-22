@@ -1,4 +1,4 @@
-#!C:\Users\admin dell\Desktop\demo\venv\Scripts\python.exe
+#!C:\Users\admin dell\Desktop\AWS Projects\venv\Scripts\python.exe
 
 import sys
 import json
