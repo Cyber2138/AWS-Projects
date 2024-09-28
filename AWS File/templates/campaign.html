@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Run a Campaign</title>
+    <title>Campaign</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -25,32 +26,41 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5); /* Dark overlay */
-            backdrop-filter: blur(8px); /* Blurred background */
-            z-index: -1; /* Ensure the overlay is behind the form */
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            z-index: -1;
         }
 
-        .campaign-container {
-            background-color: rgba(247, 245, 245, 0.7); /* Light transparent background */
+        .container {
+            background-color: rgba(247, 245, 245, 0.85);
             border-radius: 50px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            width: 89%;
-            max-width: 800px;
+            width: 90%;
+            max-width: 600px;
             padding: 30px;
             box-sizing: border-box;
             animation: fadeIn 1s ease-in-out;
+            max-height: 85vh;
+            /* overflow-y: auto; scrollbar removed */
         }
 
-        .campaign-container h2 {
-            margin-top: 0;
-            font-size: 28px;
+        h1 {
+            font-size: 32px;
             color: #333;
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #333;
+            text-align: center;
         }
 
         .form-group {
             margin-bottom: 20px;
+            position: relative;
         }
 
         .form-group label {
@@ -58,17 +68,20 @@
             margin-bottom: 8px;
             font-weight: bold;
             color: #333;
+            font-size: 16px;
         }
 
         .form-group input,
-        .form-group select,
-        .form-group textarea {
+        .form-group textarea,
+        .form-group select {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             font-size: 16px;
             border: 1px solid #ccc;
             border-radius: 5px;
             box-sizing: border-box;
+            transition: border-color 0.3s;
+            resize: vertical;
         }
 
         .form-group input:focus,
@@ -78,18 +91,11 @@
             outline: none;
         }
 
-        .form-group textarea {
-            resize: vertical;
-            height: 150px;
+        textarea {
+            min-height: 100px;
         }
 
-        .scrollable {
-            max-height: 200px; /* Set max height for scrolling */
-            overflow-y: auto; /* Enable vertical scrolling */
-            padding-right: 10px; /* Space for scrollbar */
-        }
-
-        .form-group button {
+        .form-submit button {
             width: 100%;
             padding: 12px;
             font-size: 16px;
@@ -102,8 +108,36 @@
             transition: background-color 0.3s ease;
         }
 
-        .form-group button:hover {
+        .form-submit button:hover {
             background-color: #005bb5;
+            transform: translateY(-2px);
+        }
+
+        /* Style for service type boxes */
+        .service-type-options {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .service-type {
+            flex: 1;
+            margin: 0 10px;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .service-type.active {
+            background-color: #0073e6;
+            color: white;
+            border-color: #005bb5;
         }
 
         .form-footer {
@@ -118,36 +152,6 @@
 
         .form-footer a:hover {
             text-decoration: underline;
-        }
-
-        @media (max-width: 768px) {
-            .campaign-container {
-                width: 90%;
-            }
-
-            .campaign-container h2 {
-                font-size: 24px;
-            }
-
-            .form-group input, .form-group button {
-                font-size: 14px;
-                padding: 10px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .campaign-container {
-                padding: 20px;
-            }
-
-            .campaign-container h2 {
-                font-size: 22px;
-            }
-
-            .form-group input, .form-group button {
-                font-size: 12px;
-                padding: 8px;
-            }
         }
 
         nav {
@@ -172,205 +176,84 @@
             border: 2px solid transparent;
         }
 
-        .btn-primary:hover {
-            background-color: #005bb5;
-            color: white;
-        }
-
-        .btn-primary:focus {
-            outline: none;
-            border: 2px solid #005bb5;
-        }
-
-        .btn-primary:active {
-            background-color: #004494;
-        }
-
-        .popup {
-            display: none;
-            position: fixed;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-        }
-
-        .popup .close-btn {
-            display: block;
-            margin-top: 15px;
-            padding: 10px;
-            background-color: #0073e6;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .popup .close-btn:hover {
-            background-color: #005bb5;
-        }
-
-
     </style>
-   <script>
-    function toggleFields() {
-        const messageType = document.getElementById("message-type").value;
-        const emailFields = document.getElementById("email-fields");
-        const whatsappFields = document.getElementById("whatsapp-fields");
-
-        if (messageType === "email") {
-            emailFields.style.display = "block";
-            whatsappFields.style.display = "none";
-        } else if (messageType === "whatsapp") {
-            emailFields.style.display = "none";
-            whatsappFields.style.display = "block";
-        }
-    }
-
-    function validateRecipients(inputId) {
-        const recipients = document.getElementById(inputId).value.split(',').map(item => item.trim());
-        if (recipients.length > 5) {
-            alert("The maximum number of recipients is 5.");
-            return false;
-        }
-        return true;
-    }
-
-    function launchCampaign(event) {
-        event.preventDefault();
-
-        const scheduleDate = document.getElementById("schedule-date").value;
-        const scheduleTime = document.getElementById("schedule-time").value;
-
-        const scheduledDateTime = new Date(`${scheduleDate}T${scheduleTime}`);
-        const currentTime = new Date();
-        const timeDifference = scheduledDateTime - currentTime;
-
-        if (timeDifference > 0) {
-            const countdown = document.createElement('div');
-            countdown.id = 'countdown';
-            document.body.appendChild(countdown);
-            startCountdown(timeDifference);
-        } else {
-            alert("Please choose a future date and time.");
-        }
-    }
-
-    function startCountdown(duration) {
-        const countdownElement = document.getElementById('countdown');
-        const interval = setInterval(() => {
-            if (duration <= 0) {
-                clearInterval(interval);
-                countdownElement.remove();
-                showSuccessPopup();
-            } else {
-                const hours = Math.floor((duration % 86400000) / 3600000);
-                const minutes = Math.floor((duration % 3600000) / 60000);
-                const seconds = Math.floor((duration % 60000) / 1000);
-                countdownElement.innerHTML = `Time remaining: ${hours}h ${minutes}m ${seconds}s`;
-                duration -= 1000;
-            }
-        }, 1000);
-    }
-
-    function showSuccessPopup() {
-        const popup = document.createElement('div');
-        popup.className = 'popup';
-        popup.innerHTML = `
-            <h2>Success!</h2>
-            <p>Your message has been successfully sent!</p>
-            <button class="close-btn" onclick="closePopup()">Close</button>
-        `;
-        document.body.appendChild(popup);
-        popup.style.display = 'block';
-    }
-
-    function closePopup() {
-        const popup = document.querySelector('.popup');
-        if (popup) {
-            popup.remove();
-        }
-    }
-</script>
-
 </head>
 <body>
     <nav>
         <a class="btn btn-primary" href="/">Home</a>
     </nav>
-    <div class="campaign-container">
-        <h2>Run Your Marketing Campaign</h2>
-        <form action="/run_campaign" method="POST" enctype="multipart/form-data" onsubmit="return validateRecipients(messageType === 'email' ? 'email-list' : 'whatsapp-recipient-list')">
+    <div class="container">
+        <h1>Create Your Campaign</h1>
+        <form action="#" method="POST" onsubmit="return validateForm()">
             <div class="form-group">
                 <label for="campaign-name">Campaign Name</label>
-                <input type="text" id="campaign-name" name="campaign_name" required>
+                <input type="text" id="campaign-name" name="campaign-name" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" required></textarea>
             </div>
 
             <div class="form-group">
-                <label for="message-type">Select Messaging Platform</label>
-                <select id="message-type" name="message_type" onchange="toggleFields()" required>
-                    <option value="" disabled selected>Select a platform</option>
-                    <option value="email">Email</option>
-                    <option value="whatsapp">WhatsApp</option>
+                <label for="service-type">Choose Service Type</label>
+                <div class="service-type-options">
+                    <div class="service-type" id="free" onclick="selectService('free')">Free</div>
+                    <div class="service-type" id="paid" onclick="selectService('paid')">Paid</div>
+                </div>
+                <!-- Hidden input to store the selected service type -->
+                <input type="hidden" id="service-type" name="service-type" value="free">
+            </div>
+
+            <div class="form-group">
+                <label for="automation-type">Choose Automation Type</label>
+                <select id="automation-type" name="automation-type" required>
+                    <option value="">Select...</option>
+                    <option value="whatsapp">WhatsApp Automation</option>
+                    <option value="email">Email Automation</option>
+                    <!-- <option value="sms">SMS Marketing</option>
+                    <option value="chatbot">Chatbot Integration</option>
+                    <option value="push">Push Notification</option> -->
                 </select>
             </div>
 
-            <!-- Email specific fields -->
-            <div id="email-fields" class="scrollable">
-                <div class="form-group">
-                    <label for="email-subject">Email Subject</label>
-                    <input type="text" id="email-subject" name="email_subject">
-                </div>
-
-                <div class="form-group">
-                    <label for="email-body">Email Body</label>
-                    <textarea id="email-body" name="email_body" required></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="email-list">Email Recipients (max 5, comma-separated)</label>
-                    <input type="text" id="email-list" name="email_list" placeholder="email1@example.com, email2@example.com, ..." required>
-                </div>
+            <div class="form-submit">
+                <button type="submit">Next</button>
             </div>
-
-            <!-- WhatsApp specific fields -->
-            <div id="whatsapp-fields" class="scrollable" style="display: none;">
-                <div class="form-group">
-                    <label for="whatsapp-message">WhatsApp Message</label>
-                    <textarea id="whatsapp-message" name="whatsapp_message" required></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="whatsapp-recipient-list">WhatsApp Recipients (max 5, comma-separated)</label>
-                    <input type="text" id="whatsapp-recipient-list" name="whatsapp_recipient_list" placeholder="Recipient number 1, Recipient number 2, ..." required>
-                </div>
-            </div>
-
-            <!-- Scheduling fields -->
-            <div class="form-group">
-                <label for="schedule-date">Schedule Date</label>
-                <input type="date" id="schedule-date" name="schedule_date" required>
-            </div>
-
-            <div class="form-group">
-                <label for="schedule-time">Schedule Time</label>
-                <input type="time" id="schedule-time" name="schedule_time" step="1" required>
-            </div>
-            
-
-            <div class="form-group">
-                <button type="submit">Launch Campaign</button>
-            </div>
-
-            <div id="timer" style="display: none;">
-                <h3>Message will be sent in <span id="countdown">15:00</span> minutes.</h3>
-            </div>
-            
         </form>
     </div>
-</body>
+
+    <script>
+        // Function to toggle active service type and set hidden input
+        function selectService(service) {
+            const freeBox = document.getElementById('free');
+            const paidBox = document.getElementById('paid');
+            const serviceTypeInput = document.getElementById('service-type');
+
+            if (service === 'free') {
+                freeBox.classList.add('active');
+                paidBox.classList.remove('active');
+                serviceTypeInput.value = 'free';
+            } else if (service === 'paid') {
+                paidBox.classList.add('active');
+                freeBox.classList.remove('active');
+                serviceTypeInput.value = 'paid';
+            }
+        }
+
+        function validateForm() {
+            const campaignName = document.getElementById("campaign-name").value;
+            const description = document.getElementById("description").value;
+
+            if (!campaignName || !description) {
+                alert("Please fill in all required fields.");
+                return false;
+            }
+
+            return true;
+        }
+
+        // Initialize with 'free' as the default selected service type
+        selectService('free');
+    </script> 
+</body> 
 </html>

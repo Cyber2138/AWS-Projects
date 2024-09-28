@@ -5,17 +5,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Mail, Message
 import pywhatkit as kit
 import datetime
+import pyautogui
 import os
-
-
-
-
-
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"  # Use a secure, random key for production
-
-
 
 
 # MySQL connection configuration
@@ -33,9 +27,6 @@ def create_connection():
         return None
     
 
-
-
-
 # Configuration for Flask-Mail
 app.config['MAIL_SERVER'] = 'smtp.example.com'  # Change to your email provider
 app.config['MAIL_PORT'] = 587  # For starttls
@@ -47,12 +38,10 @@ mail = Mail(app)
 
 
 
-
 # Home route
 @app.route('/')
 def home():
     return render_template('index.html')
-
 
 
 
@@ -139,45 +128,27 @@ def login():
 
 
 
-
-
 @app.route('/campaign', methods=['GET', 'POST'])
 def campaign():
-    if request.method == 'POST':
-        try:
-            # Get form data
-            campaign_name = request.form['campaign_name']
-            message_type = request.form['message_type']
-            schedule_date = request.form['schedule_date']
-            schedule_time = request.form['schedule_time']
-            whatsapp_message = request.form['whatsapp_message']
-            recipient_list = request.form['whatsapp_recipient_list'].split(',')
-
-            # Combine date and time into a datetime object
-            schedule_datetime = datetime.strptime(f"{schedule_date} {schedule_time}", '%Y-%m-%d %H:%M')
-            hour, minute = schedule_datetime.hour, schedule_datetime.minute
-
-            # If the message type is WhatsApp, send WhatsApp message
-            if message_type == 'whatsapp':
-                for recipient in recipient_list:
-                    recipient = recipient.strip()  # Clean up spaces
-                    
-                    # Send WhatsApp message at the scheduled time
-                    kit.sendwhatmsg(recipient, whatsapp_message, hour, minute)
-                
-                flash('WhatsApp messages successfully scheduled and will be sent at the specified time!', 'success')
-            
-            return redirect(url_for('campaign_success'))
-        
-        except Exception as e:
-            flash(f"An error occurred while sending the messages: {str(e)}", 'danger')
-            return redirect(url_for('campaign'))
+    # Get form data
+    campaign_name = request.form['campaign-name']
+    description = request.form['description']
+    service_type = request.form['service-type']
+    automation_type = request.form['automation-type']
     
-    return render_template('campaign.html')
+    # Logic to redirect based on automation type
+    if automation_type == 'whatsapp':
+        return redirect(url_for('whatsapp_automation'))
+    elif automation_type == 'email':
+        return redirect(url_for('email_automation'))
+    else:
+        return "Invalid Automation Type"
+    
 
-@app.route('/campaign_success')
-def campaign_success():
-    return "Campaign Launched Successfully!"
+@app.route('/whatsapp')
+def whatsapp():
+    return render_template('whatsapp.html')
 # Start the Flask application
-if __name__ == '__main__':
+if  __name__ == '__main__':
+    print('Flask server is running')
     app.run(debug=True)
