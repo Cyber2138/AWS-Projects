@@ -51,10 +51,11 @@
 				<a class="toggleMenu" href="#">Menu</a>
 				<ul class="nav">
 					<li class="active"><a href="/">Home</a></li>
-					<li><a href="/registration">Registration</a>
-					<li><a href="/login">Login</a>
-					<li><a href="#About">About Us</a>
-					</li>
+					<li><a href="/registration">Registration</a></li>
+					<li><a href="/login">Login</a></li>
+					<li><a href="/campaign">Campaign</a></li>
+					<li><a href="javascript:void(0)" onclick="scrollToSection('about-section')">About Us</a></li>
+				</ul>
 				<script type="text/javascript" src="../static/js/nav.js"></script>
 			</div><!-- end h_menu4 -->
 			<div class="clear"></div>
@@ -131,7 +132,8 @@
 </div>
 
 
-		 <div class="m_3"><span class="left_line"></span class="About">About Us<span class="right_line"> </span></div>
+		 <div class="m_3"><span class="left_line"></span>About Us<span class="right_line"> </span></div>
+		 <div id= 'about-section' class = 'about-section'>
 		      <div class="wmuSlider example">
 			    <div class="wmuSliderWrapper">
 				   <article style="position: absolute; width: 100%; opacity: 0;"> 
@@ -142,10 +144,41 @@
 						</div>
 				   </article>
               </div>
+			</div>
+		</div>
+	</div>
+
+	
                  <script src="../static/js/jquery.wmuSlider.js"></script> 
 				   <script>
        					$('.example').wmuSlider();         
-   				   </script> 	
+   				   </script> 
+				   
+				   <script>
+					function scrollToSection(sectionId) {
+						const section = document.getElementById(sectionId);
+						if (section) {
+							window.scrollTo({
+								top: section.offsetTop,
+								behavior: 'smooth'
+							});
+						}
+					}
+				
+					$(document).ready(function() {
+						// Smooth scroll for navigation links
+						$('.nav a').on('click', function(e) {
+							if ($(this).attr('href').startsWith('#')) {
+								e.preventDefault(); // Prevent default anchor behavior
+								const sectionId = $(this).attr('href').substring(1); // Get section ID
+								scrollToSection(sectionId); // Scroll to the section
+							}
+						});
+					});
+				</script>
+				
+
+
 			</div>
 	    </div>
 	    
