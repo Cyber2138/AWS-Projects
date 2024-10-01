@@ -34,7 +34,7 @@
 
         .login-container {
             background-color: rgba(247, 245, 245, 0.7); /* Light transparent background */
-            border-radius: 50px;
+            border-radius: 40px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
             width: 89%;
             max-width: 450px;
@@ -168,7 +168,7 @@
     </nav>
     <div class="login-container">
         <h2>Login</h2>
-        <form action="{{ url_for('Campaign') }}" method="POST">
+        <form action="{{ url_for('login') }}" method="POST">
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" placeholder="example@business.com" required>
