@@ -26,49 +26,6 @@ def create_connection():
         print(f"Error: {e}")
         return None
 
-# Configuration for Flask-Mail
-app.config['MAIL_SERVER'] = 'smtp.example.com'  # Change to your email provider
-app.config['MAIL_PORT'] = 587  # For starttls
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = os.environ.get('EMAIL_USER')  # Your email
-app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASS')  # Your email password
-app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('EMAIL_USER')
-mail = Mail(app)
-
-# Store scheduled tasks
-scheduled_tasks = {}
-task_counter = 0  # To generate unique task IDs
-
-def send_whatsapp_messages(numbers, message):
-    global scheduled_tasks
-    # Open WhatsApp and send the first message
-    kit.sendwhatmsg_instantly(numbers[0], message, 15)  # Opens WhatsApp and sends the first message
-    time.sleep(5)  # Wait for the first message to be sent
-
-    # Use pyautogui to send messages to the other numbers
-    for number in numbers[1:]:
-        # Click on the search bar using pyautogui
-        pyautogui.click(x=314, y=249)  # Adjust the x and y coordinates to the search bar position
-        time.sleep(1)  # Wait for a moment to ensure the click is registered
-
-        # Type the number in the search bar
-        pyautogui.typewrite(number)  # Type the contact number
-        time.sleep(1)  # Wait for the contact to be found
-
-        # Press 'Enter' to select the contact
-        pyautogui.press('enter')
-        time.sleep(5)  # Wait for the chat to open
-
-        # Type and send the message
-        pyautogui.typewrite(message)  # Type the message
-        pyautogui.press('enter')  # Send the message
-        time.sleep(1)  # A small delay between sending each message
-
-    # Notify the front-end that the message was sent
-    for task_id in scheduled_tasks:
-        if scheduled_tasks[task_id]['status'] == 'pending':
-            scheduled_tasks[task_id]['status'] = 'sent'
-
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -208,7 +165,6 @@ def campaign():
     
     return render_template('campaign.html')
 
-
 # Global variables to keep track of tasks and threading
 task_counter = 0
 scheduled_tasks = {}
@@ -256,7 +212,7 @@ def whatsapp_automation(service):
     if service == 'free':
         return render_template('whatsapp.html', service=service)
     elif service == 'paid':
-        return render_template('whatsapp_paid.html', service=service)
+        return render_template('whatsapp.html', service=service)
 
 
 
@@ -275,7 +231,7 @@ def send_whatsapp_messages(numbers, message, task_id, stop_event):
                 return
 
             # Click on the search bar using pyautogui
-            pyautogui.click(x=314, y=249)  # Adjust the x and y coordinates to the search bar position
+            pyautogui.click(x=553, y=171)  # Adjust the x and y coordinates to the search bar position
             time.sleep(1)  # Wait for a moment to ensure the click is registered
 
             # Type the number in the search bar

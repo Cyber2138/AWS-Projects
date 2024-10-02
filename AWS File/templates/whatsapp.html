@@ -140,7 +140,7 @@
         }
     
         /* Modal styles */
-        .modal {
+        /* .modal {
             display: none; 
             position: fixed; 
             z-index: 1; 
@@ -152,8 +152,8 @@
             background-color: rgba(0, 0, 0, 0.4); 
             padding-top: 60px; 
         }
-    
-        .modal-content {
+     */
+        /* .modal-content {
             background-color: #fefefe;
             margin: 15% auto; 
             padding: 20px;
@@ -168,7 +168,7 @@
             font-size: 50px;
             color: green;
         }
-    
+     */
         /* Custom Scrollbar */
         .container::-webkit-scrollbar {
             width: 15px;
@@ -293,17 +293,17 @@
             <h2>Cancel Scheduled Message</h2>
             <p>Task ID: <span id="taskId"></span></p>
             <button id="cancelButton">Cancel Message</button>
-            <button id="stopButton">Stop All Messages</button>
+            <!-- <button id="stopButton">Stop All Messages</button> -->
         </div>
 
         <!-- Modal for message sent confirmation -->
-        <div id="myModal" class="modal">
+        <!-- <div id="myModal" class="modal">
             <div class="modal-content">
                 <span class="tick-mark">✔️</span>
                 <p>Message sent successfully!</p>
                 <button id="closeModal">Close</button>
             </div>
-        </div>
+        </div> -->
     </div>
 
     <script>
@@ -450,24 +450,25 @@
             .catch(error => console.error('Error:', error));
         };
     
-        // Close modal when close button is clicked
-        document.getElementById('closeModal').onclick = function() {
-            const modal = document.getElementById('myModal');
-            modal.style.display = 'none'; // Hide modal
-        };
+        // /// Close modal when close button is clicked
+        // document.getElementById('closeModal').onclick = function() {
+        //     const modal = document.getElementById('myModal');
+        //     modal.style.display = 'none'; // Hide modal
+        // };
     
-        // Function to show modal after message is sent
-        function showModal() {
-            const modal = document.getElementById('myModal');
-            modal.style.display = 'block'; // Show modal
-        }
+        // // Function to show modal after message is sent
+        // function showModal() {
+        //     const modal = document.getElementById('myModal');
+        //     modal.style.display = 'block'; // Show modal
+        // }
     
         // Listen for messages sent confirmation
         const eventSource = new EventSource('/events'); // Set up EventSource to listen for events
         eventSource.onmessage = function(event) {
             const data = JSON.parse(event.data);
             if (data.status === 'message_sent') {
-                showModal(); // Show the modal when message is sent
+                alert("Message sent successfully")
+                 // Show the modal when message is sent
             }
         };
     </script>
