@@ -10,7 +10,7 @@ import time
 import os
  
 app = Flask(__name__)
-app.secret_key = "your_secret_key"  # Use a secure, random key for production
+# app.secret_key = "your_secret_key"  # Use a secure, random key for production
 
 # MySQL connection configuration
 def create_connection():
@@ -347,24 +347,7 @@ def events():
                     del scheduled_tasks[task_id]  # Remove task once notified
 
     return app.response_class(generate(), mimetype='text/event-stream')# @app.route('/email', methods=['GET', 'POST'])
-# def email_automation():
-#     if request.method == 'POST':
-#         email_subject = request.form['subject']
-#         email_body = request.form['body']
-#         recipients = request.form.getlist('recipients')  # List of email recipients
-
-#         # Send email to each recipient
-#         for recipient in recipients:
-#             mail.send_message(
-#                 subject=email_subject,
-#                 recipients=[recipient],
-#                 body=email_body
-#             )
-#         flash('Emails sent successfully!', 'success')
-#         return redirect(url_for('campaign'))
-
-#     return render_template('email_automation.html')
-
+# 
 @app.route('/logout')
 def logout():
     session.clear()
