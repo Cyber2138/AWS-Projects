@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 import mysql.connector
-from mysql.connector import Error
+from mysql.connector import Error,pooling
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_mail import Mail
 import pywhatkit as kit
 import pyautogui
 import threading
@@ -10,19 +9,26 @@ import time
 import os
  
 app = Flask(__name__)
-# app.secret_key = "your_secret_key"  # Use a secure, random key for production
+app.secret_key = "8019356963"  # Use a secure, random key for production
+
+DB_CONFIG = {
+            'host':'marketing.cbcikkyosovq.us-east-1.rds.amazonaws.com',  # Replace with your MySQL Workbench host
+            'user':'root',  # Replace with your MySQL username
+            'password':'abdulrmohammed',  # Replace with your MySQL password
+            'database':'ai_marketing' 
+}
 
 # MySQL connection configuration
+connection_pool = pooling.MySQLConnectionPool(
+    pool_name="mypool",
+    pool_size=5,  # Define the number of connections in the pool
+    **DB_CONFIG
+)
 def create_connection():
     try:
-        connection = mysql.connector.connect(
-            host='127.0.0.1',  # Replace with your MySQL Workbench host
-            user='root',  # Replace with your MySQL username
-            password='abdulrmohammed@38',  # Replace with your MySQL password
-            database='marketing'  # Replace with your MySQL database
-        )
+        connection = connection_pool.get_connection()  # Get a connection from the pool
         return connection
-    except Error as e:
+    except mysql.connector.Error as e:
         print(f"Error: {e}")
         return None
 
